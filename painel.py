@@ -25,6 +25,7 @@ from streamlit_folium import st_folium
 
 import limites
 import loader
+from tempo import agora
 from limites import (
     PARAMETROS,
     PARAMS_AUX,
@@ -122,7 +123,7 @@ def status_card_estacao(df_estacao: pd.DataFrame) -> tuple[str, str, pd.Timestam
     if ts_sonda is None or pd.isna(ts_sonda):
         return ("SEM LEITURA DA SONDA", CORES_STATUS["sem dado"], None)
 
-    if (pd.Timestamp.now() - ts_sonda) > timedelta(hours=2):
+    if (agora() - ts_sonda) > timedelta(hours=2):
         return (f"SONDA INATIVA {horas_atras(ts_sonda).upper()}", CORES_STATUS["suspeito"], ts_sonda)
 
     status = status_geral_estacao(df_estacao)
@@ -132,7 +133,7 @@ def status_card_estacao(df_estacao: pd.DataFrame) -> tuple[str, str, pd.Timestam
 def horas_atras(timestamp: pd.Timestamp) -> str:
     if pd.isna(timestamp):
         return "—"
-    delta = pd.Timestamp.now() - timestamp
+    delta = agora() - timestamp
     if delta < timedelta(minutes=1):
         return "agora"
     if delta < timedelta(hours=1):
@@ -240,7 +241,7 @@ def grafico_temporal(
 
 if "atualizacoes" not in st.session_state:
     st.session_state.atualizacoes = 0
-    st.session_state.ultima_atualizacao = pd.Timestamp.now()
+    st.session_state.ultima_atualizacao = agora()
 
 with st.spinner("Baixando dados das estacoes via FTPS..."):
     try:
@@ -294,7 +295,7 @@ st.sidebar.divider()
 if st.sidebar.button("Atualizar dados agora", width="stretch"):
     loader.forcar_atualizacao()
     st.session_state.atualizacoes += 1
-    st.session_state.ultima_atualizacao = pd.Timestamp.now()
+    st.session_state.ultima_atualizacao = agora()
     st.rerun()
 
 st.sidebar.caption(f"Cache atualizado: {st.session_state.ultima_atualizacao.strftime('%d/%m/%Y %H:%M')}")
@@ -320,7 +321,7 @@ with st.sidebar.expander("Baixar dados", expanded=False):
     st.download_button(
         label="ZIP - 3 estacoes (.dat brutos)",
         data=_zip_dat_brutos(),
-        file_name=f"modimedio_dat_{pd.Timestamp.now().strftime('%Y%m%d_%H%M')}.zip",
+        file_name=f"modimedio_dat_{agora().strftime('%Y%m%d_%H%M')}.zip",
         mime="application/zip",
         width="stretch",
         help="Empacota Dados_Estacao_P1/P2/P3.dat (cache local da ultima coleta)",
@@ -331,7 +332,7 @@ with st.sidebar.expander("Baixar dados", expanded=False):
         st.download_button(
             label="CSV consolidado (3 estacoes)",
             data=csv_full,
-            file_name=f"modimedio_consolidado_{pd.Timestamp.now().strftime('%Y%m%d_%H%M')}.csv",
+            file_name=f"modimedio_consolidado_{agora().strftime('%Y%m%d_%H%M')}.csv",
             mime="text/csv",
             width="stretch",
             help="Tabela longa com todas as 3 estacoes e colunas de metadados",
@@ -348,7 +349,7 @@ with st.sidebar.expander("Sobre os dados", expanded=False):
     )
 
 st.sidebar.caption("CBH Medio Paraiba do Sul")
-st.sidebar.caption(f"Atualizado em maio/{pd.Timestamp.now().year}")
+st.sidebar.caption(f"Atualizado em maio/{agora().year}")
 
 
 # =============================================================================
@@ -375,7 +376,7 @@ if pagina == "Visao Geral":
     for col, est in zip(cols, ESTACOES):
         df_est = df_full[df_full["codigo"] == est.codigo]
         chip_label, chip_cor, ts_sonda = status_card_estacao(df_est)
-        sonda_inativa = ts_sonda is not None and pd.notna(ts_sonda) and (pd.Timestamp.now() - ts_sonda) > timedelta(hours=2)
+        sonda_inativa = ts_sonda is not None and pd.notna(ts_sonda) and (agora() - ts_sonda) > timedelta(hours=2)
 
         # Ultima telemetria do datalogger (qualquer linha do .dat)
         ult = df_est.dropna(subset=["TIMESTAMP"]).tail(1)
@@ -421,7 +422,7 @@ if pagina == "Visao Geral":
                         valor = row[col_chave].iloc[0]
                         ts = row["TIMESTAMP"].iloc[0]
                         st.metric(label, fmt_br(valor, decimais))
-                        idade_h = (pd.Timestamp.now() - ts).total_seconds() / 3600
+                        idade_h = (agora() - ts).total_seconds() / 3600
                         cor_ts = CORES_STATUS["suspeito"] if idade_h > 2 else "#6c757d"
                         st.markdown(
                             f"<span style='font-size:0.75em; color:{cor_ts};'>"
@@ -572,7 +573,7 @@ if pagina == "Visao Geral":
     }
     janela_home = st.radio("Janela:", list(janelas_home.keys()), horizontal=True, index=2, key="janela_home")
     if janelas_home[janela_home] is not None:
-        df_janela = df_full[df_full["TIMESTAMP"] >= pd.Timestamp.now() - janelas_home[janela_home]]
+        df_janela = df_full[df_full["TIMESTAMP"] >= agora() - janelas_home[janela_home]]
     else:
         df_janela = df_full
 
@@ -656,7 +657,7 @@ elif pagina == "Por Estacao":
     }
     janela_sel = st.radio("Janela:", list(janelas.keys()), horizontal=True, index=2)
     if janelas[janela_sel] is not None:
-        df_plot = df_est[df_est["TIMESTAMP"] >= pd.Timestamp.now() - janelas[janela_sel]]
+        df_plot = df_est[df_est["TIMESTAMP"] >= agora() - janelas[janela_sel]]
     else:
         df_plot = df_est
 
@@ -758,7 +759,7 @@ elif pagina == "Comparativo entre Estacoes":
     }
     janela_sel = st.radio("Janela:", list(janelas.keys()), horizontal=True, index=2)
     if janelas[janela_sel] is not None:
-        df_plot = df_full[df_full["TIMESTAMP"] >= pd.Timestamp.now() - janelas[janela_sel]]
+        df_plot = df_full[df_full["TIMESTAMP"] >= agora() - janelas[janela_sel]]
     else:
         df_plot = df_full
 
