@@ -71,9 +71,22 @@ Painel sobe em http://localhost:8501.
 - O Streamlit rerenderiza com `@st.cache_data(ttl=300)`.
 - Botão **"Atualizar dados agora"** na sidebar força redownload + rerun.
 
-## Deploy em servidor (acesso interno)
+## Deploy
 
-Mesmo procedimento do painel `CBH_Uso_do_Solo` — ver `DEPLOY_SERVIDOR.md`.
+### Streamlit Community Cloud (recomendado)
+
+1. Acessar [share.streamlit.io](https://share.streamlit.io) e logar com GitHub.
+2. **New app** → selecionar o repositório `viniciusazeved/cbh-modimedio`, branch `main`, arquivo principal `painel.py`.
+3. Em **Advanced settings → Secrets**, colar o conteúdo do `.streamlit/secrets.toml.example` substituindo pelos valores reais (host, usuário e senha do FTP do SIGA-AGEVAP).
+4. Deploy. URL final: `https://cbh-modimedio.streamlit.app` (ou variação).
+
+Observações:
+- O cache em `data/cache/` é efêmero no Streamlit Cloud (reseta a cada cold start) — sem problema, é só otimização. O TTL de 5 min do `@st.cache_data` continua valendo.
+- Recursos: o tier gratuito tem 1 GB RAM e ~1 vCPU. Suficiente para esse painel (geopandas + plotly + 3 .dat de ~220 KB cada).
+
+### Servidor local / rede interna
+
+Ver [`DEPLOY_SERVIDOR.md`](DEPLOY_SERVIDOR.md).
 
 ## Parâmetros monitorados
 
