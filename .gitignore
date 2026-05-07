@@ -1,0 +1,29 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Dados e segredos
+.env
+.streamlit/secrets.toml
+data/cache/
+data/*.dat
+.ipynb_checkpoints/
+
+# Tools / IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Credenciais sensíveis (legado)
+FTP.txt

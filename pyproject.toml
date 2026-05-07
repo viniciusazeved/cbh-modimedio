@@ -1,0 +1,22 @@
+[project]
+name = "cbh-modimedio"
+version = "0.1.0"
+description = "Painel de monitoramento qualitativo em tempo real - 3 estacoes no Medio Paraiba do Sul (CBH-MPS)"
+requires-python = ">=3.11"
+
+dependencies = [
+    "streamlit>=1.39.0",
+    "streamlit-folium>=0.22.0",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "plotly>=5.24.0",
+    "geopandas>=1.0.0",
+    "shapely>=2.0.0",
+    "pyproj>=3.6.0",
+    "fiona>=1.10.0",
+    "folium>=0.17.0",
+    "python-dotenv>=1.0.0",
+]
+
+[tool.uv]
+package = false
