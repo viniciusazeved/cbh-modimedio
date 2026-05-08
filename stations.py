@@ -3,8 +3,8 @@ Configuracao das estacoes de monitoramento (sondas multiparametro).
 
 Mapeamento entre arquivos do FTP (P1/P2/P3) e atributos do shapefile MODIMEDIO UMRs.
 P1 esta confirmado como Belmonte pelo cabecalho TOA5 do .dat.
-P2 e P3 estao com header generico ("1") - mapeamento abaixo eh provisorio
-e pode ser ajustado se a equipe SIGA confirmar a ordem real.
+P2 e P3 vem com header generico ("1"); a atribuicao foi confirmada pelo
+Caio (tecnico do CBH-MPS): P2 = Toyota (Resende), P3 = Principal (Paraiba do Sul).
 """
 
 from dataclasses import dataclass
@@ -34,19 +34,19 @@ ESTACOES = [
     ),
     Estacao(
         codigo="P2",
-        nome="ETA Principal",
-        municipio="Paraiba do Sul",
-        operadora="Aguas da Condessa",
-        arquivo_dat="Dados_Estacao_P2.dat",
-        cor="#2ca02c",
-    ),
-    Estacao(
-        codigo="P3",
         nome="ETA Toyota",
         municipio="Resende",
         operadora="Agua das Agulhas Negras",
-        arquivo_dat="Dados_Estacao_P3.dat",
+        arquivo_dat="Dados_Estacao_P2.dat",
         cor="#d62728",
+    ),
+    Estacao(
+        codigo="P3",
+        nome="ETA Principal",
+        municipio="Paraiba do Sul",
+        operadora="Aguas da Condessa",
+        arquivo_dat="Dados_Estacao_P3.dat",
+        cor="#2ca02c",
     ),
 ]
 
