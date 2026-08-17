@@ -662,8 +662,8 @@ elif pagina == "Por Estacao":
         df_plot = df_est
 
     # Tabs: qualidade x auxiliares
-    aba_qual, aba_aux, aba_violacoes, aba_dados = st.tabs(
-        ["Qualidade da agua", "Meteorologia / operacional", "Violacoes CONAMA", "Tabela bruta"]
+    aba_qual, aba_aux, aba_exced, aba_dados = st.tabs(
+        ["Qualidade da agua", "Meteorologia / operacional", "Excedencias Classe II", "Tabela bruta"]
     )
 
     with aba_qual:
@@ -684,7 +684,13 @@ elif pagina == "Por Estacao":
                 p = PARAMS_POR_CHAVE[chave]
                 st.info(f"Sem dados para {p.rotulo} na janela selecionada.")
 
-    with aba_violacoes:
+    with aba_exced:
+        st.caption(
+            "Dados brutos sob controle primario de plausibilidade, sem validacao "
+            "laboratorial. Excedencia indicativa ao referencial da Resolucao CONAMA "
+            "357/2005 (Classe II) nao constitui enquadramento nem caracterizacao de "
+            "infracao."
+        )
         registros = []
         for chave in PARAMS_QUALIDADE:
             p = PARAMS_POR_CHAVE[chave]
@@ -695,33 +701,33 @@ elif pagina == "Por Estacao":
                 continue
             for _, row in sub.iterrows():
                 v = row[chave]
-                viol = False
+                exc = False
                 tipo = ""
                 if p.limite_min is not None and v < p.limite_min:
-                    viol, tipo = True, f"abaixo do minimo ({p.limite_min})"
+                    exc, tipo = True, f"abaixo do minimo ({p.limite_min})"
                 elif p.limite_max is not None and v > p.limite_max:
-                    viol, tipo = True, f"acima do maximo ({p.limite_max})"
-                if viol:
+                    exc, tipo = True, f"acima do maximo ({p.limite_max})"
+                if exc:
                     registros.append({
                         "Data/Hora": row["TIMESTAMP"],
                         "Parametro": p.rotulo,
                         "Valor": v,
                         "Unidade": p.unidade,
-                        "Violacao": tipo,
+                        "Excedencia": tipo,
                     })
         if registros:
-            df_viol = pd.DataFrame(registros).sort_values("Data/Hora", ascending=False)
-            st.warning(f"**{len(df_viol)}** registro(s) fora do padrao Classe II na janela selecionada.")
-            st.dataframe(df_viol, width="stretch", hide_index=True)
-            csv = df_viol.to_csv(index=False).encode("utf-8-sig")
+            df_exc = pd.DataFrame(registros).sort_values("Data/Hora", ascending=False)
+            st.warning(f"**{len(df_exc)}** registro(s) fora do referencial Classe II na janela selecionada.")
+            st.dataframe(df_exc, width="stretch", hide_index=True)
+            csv = df_exc.to_csv(index=False).encode("utf-8-sig")
             st.download_button(
-                "Baixar violacoes (CSV)",
+                "Baixar excedencias (CSV)",
                 data=csv,
-                file_name=f"violacoes_{est.codigo}_{janela_sel.replace(' ', '_').lower()}.csv",
+                file_name=f"excedencias_{est.codigo}_{janela_sel.replace(' ', '_').lower()}.csv",
                 mime="text/csv",
             )
         else:
-            st.success("Sem violacoes do padrao Classe II na janela selecionada.")
+            st.success("Sem excedencias ao referencial Classe II na janela selecionada.")
 
     with aba_dados:
         st.dataframe(df_plot.sort_values("TIMESTAMP", ascending=False), width="stretch", hide_index=True)
