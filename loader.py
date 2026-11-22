@@ -111,12 +111,13 @@ def carregar_limite_rh3() -> gpd.GeoDataFrame | None:
 
 
 def pontos_com_estacoes() -> pd.DataFrame:
-    """Junta o shapefile com a config de estacoes pelo nome (campo SITE)."""
+    """Junta o shapefile com a config de estacoes pela referencia de localizacao (campo SITE)."""
     gdf = carregar_pontos_geograficos()
     df_est = pd.DataFrame([
         {
             "codigo": e.codigo,
             "nome": e.nome,
+            "site_shp": e.site_shp,
             "municipio_cfg": e.municipio,
             "operadora_cfg": e.operadora,
             "cor": e.cor,
@@ -124,7 +125,7 @@ def pontos_com_estacoes() -> pd.DataFrame:
         for e in ESTACOES
     ])
     out = df_est.merge(gdf[["SITE", "Municipio", "Concession", "lon", "lat"]],
-                       left_on="nome", right_on="SITE", how="left")
+                       left_on="site_shp", right_on="SITE", how="left")
     return out
 
 

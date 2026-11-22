@@ -341,7 +341,7 @@ with st.sidebar.expander("Baixar dados", expanded=False):
 with st.sidebar.expander("Sobre os dados", expanded=False):
     st.markdown(
         """
-        - Dados de **3 sondas multiparametro** instaladas em ETAs do CBH-MPS.
+        - Dados de **3 sondas multiparametro** instaladas na calha do rio Paraíba do Sul, em Resende, Volta Redonda e Paraíba do Sul.
         - Coleta a cada **5 minutos** via datalogger Campbell CR300.
         - Transmissao para FTP do SIGA-AGEVAP.
         - Limites: **CONAMA 357/2005, Art. 15** (aguas doces Classe II).
@@ -808,8 +808,10 @@ elif pagina == "Sobre":
     st.markdown(
         """
         Este painel consolida em tempo real (intervalo de **5 minutos**) os dados de **3 sondas
-        multiparametro** instaladas em estacoes de tratamento de agua (ETAs) operadas por
-        concessionarias parceiras do **Comite de Bacia Hidrografica do Medio Paraiba do Sul (CBH-MPS)**.
+        multiparametro** instaladas na calha do rio Paraíba do Sul, em Resende, Volta Redonda e Paraíba do Sul,
+        em parceria entre o **Comite de Bacia Hidrografica do Medio Paraiba do Sul (CBH-MPS)** e concessionarias
+        de saneamento. Cada estacao e identificada pelo municipio; a estacao de tratamento de agua (ETA) mais
+        proxima serve apenas como referencia de localizacao.
 
         Os dados brutos sao gerados por dataloggers Campbell Scientific CR300 e transmitidos
         via FTPS (FTP sobre TLS) para o servidor SIGA-AGEVAP.

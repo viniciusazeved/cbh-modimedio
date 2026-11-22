@@ -12,12 +12,16 @@ Limites de qualidade: **CONAMA 357/2005 — águas doces Classe II**.
 
 | Código | Estação        | Município          | Operadora                |
 |--------|----------------|--------------------|--------------------------|
-| P1     | ETA Belmonte   | Volta Redonda      | SAAE-VR                  |
-| P2     | ETA Principal  | Paraíba do Sul     | Águas da Condessa        |
-| P3     | ETA Toyota     | Resende            | Água das Agulhas Negras  |
+| P1     | Estação Volta Redonda   | Volta Redonda      | SAAE-VR                  |
+| P2     | Estação Resende         | Resende            | Água das Agulhas Negras  |
+| P3     | Estação Paraíba do Sul  | Paraíba do Sul     | Águas da Condessa        |
+
+> As sondas ficam na calha do rio Paraíba do Sul. Cada estação é identificada pelo município; a ETA
+> vizinha (Belmonte, Toyota e Principal) é só referência de localização e aparece apenas no campo SITE do
+> shapefile, usado na junção (`site_shp` em `stations.py`).
 
 > A correspondência P1↔Belmonte vem do cabeçalho TOA5 do `.dat`.
-> P2 e P3 estão como genéricos no FTP e foram mapeados em ordem alfabética.
+> P2 e P3 estão como genéricos no FTP; o mapeamento (P2 = Resende, P3 = Paraíba do Sul) foi confirmado pelo técnico do CBH-MPS.
 > Para corrigir, edite `stations.py`.
 
 ## Estrutura do projeto
@@ -106,10 +110,10 @@ Ver [`DEPLOY_SERVIDOR.md`](DEPLOY_SERVIDOR.md).
 
 ## Observações operacionais (na primeira inspeção)
 
-- **ETA Belmonte (P1):** dados frescos, fluxo regular.
-- **ETA Principal (P2):** sonda multiparâmetro retornando NaN para todos os parâmetros
+- **Estação Volta Redonda (P1):** dados frescos, fluxo regular.
+- **Estação Paraíba do Sul (P3):** sonda multiparâmetro retornando NaN para todos os parâmetros
   qualitativos (apenas datalogger, ar e bateria estão respondendo). Verificar com a operadora.
-- **ETA Toyota (P3):** última leitura válida há ~2 dias; turbidez na última leitura ≈ 288 NTU
+- **Estação Resende (P2):** última leitura válida há ~2 dias; turbidez na última leitura ≈ 288 NTU
   (acima do limite Classe II — possível pico de descarga sólida pós-chuva ou problema na sonda).
 
 ## Créditos
